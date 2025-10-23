@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>bayes.club status page</title>
+    <!-- Your CSS -->
+    <link href="./mastodon-timeline.min.css" rel="stylesheet" />
+  </head>
+
+  <style>
+    #main {
+        max-width: 15cm;
+        margin:auto;
+    }
+  </style>
+  <body>
+    <div id="main">
+        <h1>Bayes.club status</h1>
+    <div id="desc">
+        Status is currently updated only manually via posts to <a href="https://mastodon.social/@bayes_status/">@bayes_status@mastodon.social</a>
+    </div>
+    <div id="mt-container" class="mt-container">
+      <div class="mt-body" role="feed">
+        <div class="mt-loading-spinner"></div>
+      </div>
+    </div>
+    </div>
+    <script src="./mastodon-timeline.umd.js"></script>
+    <script>
+      const myTimeline = new MastodonTimeline.Init({
+        instanceUrl: "https://mastodon.social",
+        timelineType: "profile",
+        userId: "115423191792325520",
+        profileName: "@bayes_status",
+    });
+
+    </script>
+  </body>
+</html>
