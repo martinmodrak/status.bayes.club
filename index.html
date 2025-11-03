@@ -10,6 +10,10 @@
           max-width: 15cm;
           margin:auto;
       }
+
+      th,td {
+         text-align: left;
+      }
     </style>
     <link href="./mastodon-timeline.min.css" rel="stylesheet" />
   </head>
@@ -17,8 +21,33 @@
   <body>
     <div id="main">
         <h1>Bayes.club status</h1>
+        <h2>Automatic status info</h2>
+        <p><em>If the server works, should update every 10 minutes. CET timezeone</em></p>
+        <table>
+          <tr>
+            <th>Last updated:</th><td id="stats_date"></td>
+          </tr>
+          <tr>
+            <th>Disk usage:</th><td id="stats_disk"></td>
+          </tr>
+          <tr>
+            <th>Memory usage:</th><td id="stats_mem"></td>
+          </tr>
+          <tr>
+            <th>CPU usage:</th><td id="stats_cpu"></td>
+          </tr>
+          <tr>
+            <th>Last backup date: </th>
+            <td id="backup_date"></td>
+          </tr>
+          <tr>
+            <th>Last backup size: </th>
+            <td id="backup_size"></td>
+          </tr>
+        </table>
+    <h2>Manual status updates</h2>
     <div id="desc">
-        Status is currently updated only manually via posts to <a href="https://mastodon.social/@bayes_status/">@bayes_status@mastodon.social</a>
+        Manual status updates via posts to <a href="https://mastodon.social/@bayes_status/">@bayes_status@mastodon.social</a>
     </div>
     <div id="mt-container" class="mt-container">
       <div class="mt-body" role="feed">
@@ -35,7 +64,48 @@
         userId: "115423191792325520",
         profileName: "@bayes_status",
     });
+      
+    fetch("https://raw.githubusercontent.com/martinmodrak/bayes.club-current-status/refs/heads/main/status.json", 
+      { 
+        cache: "no-cache",
+        mode: "cors"
+      }
+    ).then(
+      (response) => {
+          if(!response.ok) {
+            throw new Error("Request unsuccesful")
+          }
+          return response.json();
+      }
+    ).then((data) => {
+       document.getElementById("stats_date").appendChild(document.createTextNode(data.timestamp));
 
+       document.getElementById("stats_mem").appendChild(document.createTextNode(data.mem));
+       document.getElementById("stats_cpu").appendChild(document.createTextNode(data.cpu));
+       document.getElementById("stats_disk").appendChild(document.createTextNode(data.disk));
+    }).catch( (error) => {
+       document.getElementById("stats_date").appendChild(document.createTextNode(error));
+    });
+
+    fetch("https://raw.githubusercontent.com/martinmodrak/bayes.club-current-status/refs/heads/main/backup.json", 
+      { 
+        cache: "no-cache",
+        mode: "cors"
+      }
+    ).then(
+      (response) => {
+          if(!response.ok) {
+            throw new Error("Request unsuccesful")
+          }
+          return response.json();
+      }
+    ).then((data) => {
+       document.getElementById("backup_date").appendChild(document.createTextNode(data.date));
+
+       document.getElementById("backup_size").appendChild(document.createTextNode(data.size));
+    }).catch( (error) => {
+       document.getElementById("backup_date").appendChild(document.createTextNode(error));
+    });;
     </script>
   </body>
 </html>
